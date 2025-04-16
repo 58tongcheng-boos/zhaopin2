@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>求职信息登记表</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://bpic.588ku.com/back_pic/06/16/37/0762d7ac42cba4f.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        body:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3); /* 调暗背景 */
+            z-index: 0;
+        }
+        
+        .overlay {
+            background-color: rgba(255, 255, 255, 0.85); /* 调整为更透明 */
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(211, 47, 47, 0.7); /* 边框更透明 */
+            position: relative;
+            z-index: 1;
+            margin: 20px 0;
+            backdrop-filter: blur(5px); /* 添加毛玻璃效果 */
+        }
+        
+        h1 {
+            text-align: center;
+            color: #d32f2f;
+            margin-bottom: 25px;
+            font-size: 26px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        h1:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #d32f2f;
+        }
+        
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        label.required:after {
+            content: " *";
+            color: #d32f2f;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(221, 221, 221, 0.8);
+            border-radius: 5px;
+            font-size: 15px;
+            box-sizing: border-box;
+            transition: all 0.3s;
+            font-family: 'Microsoft YaHei', sans-serif;
+            background-color: rgba(255, 255, 255, 0.8); /* 输入框半透明 */
+        }
+        
+        input:focus, select:focus {
+            border-color: #d32f2f;
+            outline: none;
+            box-shadow: 0 0 5px rgba(211, 47, 47, 0.3);
+            background-color: rgba(255, 255, 255, 0.95); /* 聚焦时更不透明 */
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        button {
+            background-color: rgba(211, 47, 47, 0.9); /* 按钮半透明 */
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-top: 15px;
+        }
+        
+        button:hover {
+            background-color: rgba(183, 28, 28, 0.9); /* 悬停时半透明 */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:disabled {
+            background-color: rgba(204, 204, 204, 0.7);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* 弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+        
+        .modal-content {
+            background-color: rgba(255, 255, 255, 0.95);
+            margin: 10% auto;
+            padding: 25px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            border-top: 5px solid #d32f2f;
+            animation: slideDown 0.3s;
+            backdrop-filter: blur(5px);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .close {
+            color: #aaa;
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close:hover {
+            color: #d32f2f;
+        }
+        
+        .modal-content h2 {
+            color: #d32f2f;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        #userInfo {
+            background: rgba(245, 245, 245, 0.7);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            text-align: left;
+            white-space: pre-line;
+            line-height: 1.6;
+        }
+        
+        .required-hint {
+            font-size: 13px;
+            color: #d32f2f;
+            margin-top: 5px;
+            text-align: right;
+        }
+        
+        .chinese-pattern {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .pattern-1 {
+            top: 20px;
+            left: 20px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 0 L100 50 L50 100 L0 50 Z" fill="%23d32f2f"/></svg>');
+        }
+        
+        .pattern-2 {
+            bottom: 20px;
+            right: 20px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%23d32f2f"/></svg>');
+        }
+        
+        .privacy-checkbox {
+            display: flex;
+            align-items: flex-start;
+            margin: 15px 0;
+        }
+        
+        .privacy-checkbox input {
+            width: auto;
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+        
+        .privacy-checkbox label {
+            font-weight: normal;
+            text-align: left;
+            margin-bottom: 0;
+        }
+        
+        .privacy-checkbox a {
+            color: #d32f2f;
+            text-decoration: none;
+        }
+        
+        .privacy-checkbox a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: #d32f2f;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 480px) {
+            .overlay {
+                padding: 20px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            h1 {
+                font-size: 22px;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chinese-pattern pattern-1"></div>
+    <div class="chinese-pattern pattern-2"></div>
+    
+    <div class="overlay">
+        <h1>求职信息登记表</h1>
+        <form id="registrationForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name" class="required">真实姓名</label>
+                    <input type="text" id="name" name="name" placeholder="请输入您的真实姓名" required>
+                    <div class="error-message" id="name-error">请输入真实姓名</div>
+                </div>
+                <div class="form-group">
+                    <label for="gender" class="required">性别</label>
+                    <select id="gender" name="gender" required>
+                        <option value="">请选择性别</option>
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                        <option value="其他">其他</option>
+                    </select>
+                    <div class="error-message" id="gender-error">请选择性别</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="age" class="required">年龄</label>
+                <input type="number" id="age" name="age" placeholder="请输入您的年龄" min="18" max="65" required>
+                <div class="error-message" id="age-error">请输入有效年龄(18-65岁)</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone" class="required">手机号码</label>
+                <input type="tel" id="phone" name="phone" placeholder="请输入11位手机号码" required>
+                <div class="error-message" id="phone-error">请输入有效的手机号码</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="wechat" class="required">微信账号</label>
+                <input type="text" id="wechat" name="wechat" placeholder="请输入您的微信号" required>
+                <div class="error-message" id="wechat-error">请输入微信号</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="position" class="required">工作类型</label>
+                <select id="position" name="position" required>
+                    <option value="">请选择工作类型</option>
+                    <option value="阅读">阅读</option>
+                    <option value="观影">观影</option>
+                    <option value="抄文">抄文</option>
+                    <option value="关注">关注</option>
+                    <option value="点赞">点赞</option>
+                </select>
+                <div class="error-message" id="position-error">请选择工作类型</div>
+            </div>
+            
+            <div class="privacy-checkbox">
+                <input type="checkbox" id="privacy" name="privacy" required>
+                <label for="privacy">我已阅读并同意<a href="#" id="privacyLink">《隐私政策》</a></label>
+                <div class="error-message" id="privacy-error">请阅读并同意隐私政策</div>
+            </div>
+            
+            <p class="required-hint">* 为必填项</p>
+            <button type="submit" id="submitBtn">
+                <span id="submitText">提交登记</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- 登记成功弹窗 -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>登记成功!</h2>
+            <p>感谢您的登记，我们会尽快与您联系!</p>
+            <div id="userInfo"></div>
+        </div>
+    </div>
+    
+    <!-- 隐私政策弹窗 -->
+    <div id="privacyModal" class="modal">
+        <div class="modal-content" style="text-align: left;">
+            <span class="close">&times;</span>
+            <h2>隐私政策</h2>
+            <p>我们非常重视您的隐私保护，特此说明我们将如何收集、使用和保护您的个人信息：</p>
+            <ol>
+                <li>我们仅收集必要的求职信息，用于招聘流程评估。</li>
+                <li>您的信息将严格保密，仅限招聘相关人员查看。</li>
+                <li>未经您同意，我们不会将您的信息透露给第三方。</li>
+                <li>您有权随时要求查看、修改或删除您的个人信息。</li>
+                <li>我们采取合理的安全措施保护您的个人信息安全。</li>
+                <li>在本协议中未声明的其他一切权利，仍归本公司所有。本公司保留对本协议的最终解释权利。</li>
+            </ol>
+            <p>如果您有任何疑问，请联系我们！</p>
+        </div>
+    </div>
+
+    <script>
+        // 获取表单和弹窗元素
+        const form = document.getElementById('registrationForm');
+        const modal = document.getElementById('successModal');
+        const privacyModal = document.getElementById('privacyModal');
+        const closeBtns = document.querySelectorAll('.close');
+        const userInfo = document.getElementById('userInfo');
+        const submitBtn = document.getElementById('submitBtn');
+        const submitText = document.getElementById('submitText');
+        const privacyLink = document.getElementById('privacyLink');
+        
+        // 显示加载状态
+        function showLoading() {
+            submitBtn.disabled = true;
+            submitText.innerHTML = '<span class="loading"></span>提交中...';
+        }
+        
+        // 隐藏加载状态
+        function hideLoading() {
+            submitBtn.disabled = false;
+            submitText.textContent = '提交登记';
+        }
+        
+        // 显示错误消息
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId + '-error');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            document.getElementById(elementId).style.borderColor = '#d32f2f';
+        }
+        
+        // 隐藏错误消息
+        function hideError(elementId) {
+            document.getElementById(elementId + '-error').style.display = 'none';
+            document.getElementById(elementId).style.borderColor = '#ddd';
+        }
+        
+        // 表单验证
+        function validateForm() {
+            let isValid = true;
+            
+            // 验证姓名
+            const name = document.getElementById('name').value.trim();
+            if (!name) {
+                showError('name', '请输入真实姓名');
+                isValid = false;
+            } else {
+                hideError('name');
+            }
+            
+            // 验证性别
+            const gender = document.getElementById('gender').value;
+            if (!gender) {
+                showError('gender', '请选择性别');
+                isValid = false;
+            } else {
+                hideError('gender');
+            }
+            
+            // 验证年龄
+            const age = document.getElementById('age').value;
+            if (!age) {
+                showError('age', '请输入年龄');
+                isValid = false;
+            } else if (age < 18 || age > 65) {
+                showError('age', '年龄必须在18-65岁之间');
+                isValid = false;
+            } else {
+                hideError('age');
+            }
+            
+            // 验证手机号
+            const phone = document.getElementById('phone').value.trim();
+            const phoneRegex = /^1[3-9]\d{9}$/;
+            if (!phone) {
+                showError('phone', '请输入手机号码');
+                isValid = false;
+            } else if (!phoneRegex.test(phone)) {
+                showError('phone', '请输入有效的手机号码');
+                isValid = false;
+            } else {
+                hideError('phone');
+            }
+            
+            // 验证微信
+            const wechat = document.getElementById('wechat').value.trim();
+            if (!wechat) {
+                showError('wechat', '请输入微信号');
+                isValid = false;
+            } else {
+                hideError('wechat');
+            }
+            
+            // 验证工作类型
+            const position = document.getElementById('position').value;
+            if (!position) {
+                showError('position', '请选择工作类型');
+                isValid = false;
+            } else {
+                hideError('position');
+            }
+            
+            // 验证隐私政策
+            const privacyChecked = document.getElementById('privacy').checked;
+            if (!privacyChecked) {
+                showError('privacy', '请阅读并同意隐私政策');
+                isValid = false;
+            } else {
+                hideError('privacy');
+            }
+            
+            return isValid;
+        }
+        
+        // 表单提交处理
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 验证表单
+            if (!validateForm()) {
+                return;
+            }
+            
+            // 获取输入值
+            const name = document.getElementById('name').value.trim();
+            const gender = document.getElementById('gender').value;
+            const age = document.getElementById('age').value;
+            const phone = document.getElementById('phone').value.trim();
+            const wechat = document.getElementById('wechat').value.trim();
+            const position = document.getElementById('position').value;
+            
+            // 显示加载状态
+            showLoading();
+            
+            // 使用FormSubmit.co服务（免费）
+            fetch('https://formsubmit.co/ajax/fenda147258@gmail.com', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    真实姓名: name,
+                    性别: gender,
+                    年龄: age,
+                    手机号码: phone,
+                    微信账号: wechat,
+                    工作类型: position,
+                    _subject: `求职申请: ${name} - ${position}`,
+                    _template: 'table',
+                    _autoresponse: `尊敬的${name}，感谢您提交求职申请，我们已收到您应聘${position}职位的资料，会尽快与您联系！`
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('网络响应不正常');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 显示用户信息
+                userInfo.innerHTML = `
+                    <strong>真实姓名:</strong> ${name}<br>
+                    <strong>性别:</strong> ${gender}<br>
+                    <strong>年龄:</strong> ${age}<br>
+                    <strong>电话:</strong> ${phone}<br>
+                    <strong>微信:</strong> ${wechat}<br>
+                    <strong>工作类型:</strong> ${position}
+                `;
+                
+                // 显示弹窗
+                modal.style.display = 'block';
+                
+                // 清空表单
+                form.reset();
+                
+                // 隐藏加载状态
+                hideLoading();
+            })
+            .catch(error => {
+                console.error('提交错误:', error);
+                // 显示用户信息
+                userInfo.innerHTML = `
+                    <strong>真实姓名:</strong> ${name}<br>
+                    <strong>年龄:</strong> ${age}<br>
+                    <strong>电话:</strong> ${phone}<br>
+                    <strong>微信:</strong> ${wechat}<br>
+                    <strong>工作类型:</strong> ${position}<br>
+                    <p style="color: #d32f2f;">(提交可能未成功，请稍后重试或直接联系我们)</p>
+                `;
+                
+                // 显示弹窗
+                modal.style.display = 'block';
+                form.reset();
+                
+                // 隐藏加载状态
+                hideLoading();
+            });
+        });
+        
+        // 关闭弹窗
+        closeBtns.forEach(btn => {
+            btn.onclick = function() {
+                modal.style.display = 'none';
+                privacyModal.style.display = 'none';
+            }
+        });
+        
+        // 点击弹窗外部关闭
+        window.onclick = function(event) {
+            if (event.target == modal || event.target == privacyModal) {
+                modal.style.display = 'none';
+                privacyModal.style.display = 'none';
+            }
+        }
+        
+        // 隐私政策链接点击
+        privacyLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            privacyModal.style.display = 'block';
+        });
+        
+        // 实时验证
+        document.getElementById('name').addEventListener('input', function() {
+            if (this.value.trim()) hideError('name');
+        });
+        
+        document.getElementById('gender').addEventListener('change', function() {
+            if (this.value) hideError('gender');
+        });
+        
+        document.getElementById('age').addEventListener('input', function() {
+            const age = parseInt(this.value);
+            if (age >= 18 && age <= 65) hideError('age');
+        });
+        
+        document.getElementById('phone').addEventListener('input', function() {
+            const phoneRegex = /^1[3-9]\d{0,9}$/;
+            if (phoneRegex.test(this.value.trim())) hideError('phone');
+        });
+        
+        document.getElementById('wechat').addEventListener('input', function() {
+            if (this.value.trim()) hideError('wechat');
+        });
+        
+        document.getElementById('position').addEventListener('change', function() {
+            if (this.value) hideError('position');
+        });
+        
+        document.getElementById('privacy').addEventListener('change', function() {
+            if (this.checked) hideError('privacy');
+        });
+    </script>
+</body>
+</html>
