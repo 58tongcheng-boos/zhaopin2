@@ -342,19 +342,6 @@
                 <div class="error-message" id="wechat-error">请输入微信号</div>
             </div>
             
-            <div class="form-group">
-                <label for="position" class="required">工作类型</label>
-                <select id="position" name="position" required>
-                    <option value="">请选择工作类型</option>
-                    <option value="阅读">阅读</option>
-                    <option value="观影">观影</option>
-                    <option value="抄文">抄文</option>
-                    <option value="关注">关注</option>
-                    <option value="点赞">点赞</option>
-                </select>
-                <div class="error-message" id="position-error">请选择工作类型</div>
-            </div>
-            
             <div class="privacy-checkbox">
                 <input type="checkbox" id="privacy" name="privacy" required>
                 <label for="privacy">我已阅读并同意<a href="#" id="privacyLink">《隐私政策》</a></label>
@@ -489,15 +476,6 @@
                 hideError('wechat');
             }
             
-            // 验证工作类型
-            const position = document.getElementById('position').value;
-            if (!position) {
-                showError('position', '请选择工作类型');
-                isValid = false;
-            } else {
-                hideError('position');
-            }
-            
             // 验证隐私政策
             const privacyChecked = document.getElementById('privacy').checked;
             if (!privacyChecked) {
@@ -525,7 +503,6 @@
             const age = document.getElementById('age').value;
             const phone = document.getElementById('phone').value.trim();
             const wechat = document.getElementById('wechat').value.trim();
-            const position = document.getElementById('position').value;
             
             // 显示加载状态
             showLoading();
@@ -543,10 +520,9 @@
                     年龄: age,
                     手机号码: phone,
                     微信账号: wechat,
-                    工作类型: position,
-                    _subject: `求职申请: ${name} - ${position}`,
+                    _subject: `求职申请: ${name}`,
                     _template: 'table',
-                    _autoresponse: `尊敬的${name}，感谢您提交求职申请，我们已收到您应聘${position}职位的资料，会尽快与您联系！`
+                    _autoresponse: `尊敬的${name}，感谢您提交求职申请，我们已收到您的资料，会尽快与您联系！`
                 })
             })
             .then(response => {
@@ -562,8 +538,7 @@
                     <strong>性别:</strong> ${gender}<br>
                     <strong>年龄:</strong> ${age}<br>
                     <strong>电话:</strong> ${phone}<br>
-                    <strong>微信:</strong> ${wechat}<br>
-                    <strong>工作类型:</strong> ${position}
+                    <strong>微信:</strong> ${wechat}
                 `;
                 
                 // 显示弹窗
@@ -583,7 +558,6 @@
                     <strong>年龄:</strong> ${age}<br>
                     <strong>电话:</strong> ${phone}<br>
                     <strong>微信:</strong> ${wechat}<br>
-                    <strong>工作类型:</strong> ${position}<br>
                     <p style="color: #d32f2f;">(提交可能未成功，请稍后重试或直接联系我们)</p>
                 `;
                 
@@ -639,10 +613,6 @@
         
         document.getElementById('wechat').addEventListener('input', function() {
             if (this.value.trim()) hideError('wechat');
-        });
-        
-        document.getElementById('position').addEventListener('change', function() {
-            if (this.value) hideError('position');
         });
         
         document.getElementById('privacy').addEventListener('change', function() {
